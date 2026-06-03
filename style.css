@@ -1,13 +1,30 @@
 
 :root {
     --primary-color: #007bff;
+    --primary-hover: #0056b3;
     --secondary-color: #f8f9fa;
     --text-color: #333;
     --background-color: #fff;
+    --surface-color: #fff;
+    --border-color: #e9ecef;
+    --border-soft: #eee;
     --danger-color: #dc3545;
     --container-padding: 20px;
     --border-radius: 8px;
     --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+    --primary-color: #4dabf7;
+    --primary-hover: #74c0fc;
+    --secondary-color: #1e1e1e;
+    --text-color: #e0e0e0;
+    --background-color: #121212;
+    --surface-color: #2a2a2a;
+    --border-color: #3a3a3a;
+    --border-soft: #3a3a3a;
+    --danger-color: #e03131;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
 }
 
 body {
@@ -16,14 +33,38 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 header {
+    position: relative;
     background-color: var(--primary-color);
     color: white;
     text-align: center;
     padding: 1.5rem 0;
     box-shadow: var(--box-shadow);
+}
+
+#theme-toggle {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#theme-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.35);
 }
 
 main {
@@ -58,8 +99,8 @@ section {
 }
 
 .log-section {
-    background-color: #fff; /* Give meal logs a slightly different background */
-    border: 1px solid #e9ecef;
+    background-color: var(--surface-color); /* Give meal logs a slightly different background */
+    border: 1px solid var(--border-color);
 }
 
 #total-log {
@@ -102,9 +143,19 @@ form {
 }
 
 
-input, select, button {
+input, select {
     padding: 12px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--surface-color);
+    color: var(--text-color);
+}
+
+button {
+    padding: 12px;
     border-radius: 4px;
     font-size: 1rem;
     width: 100%;
@@ -121,7 +172,7 @@ button, #get-feedback-btn {
 }
 
 button:hover, #get-feedback-btn:hover {
-    background-color: #0056b3;
+    background-color: var(--primary-hover);
 }
 
 #breakfast-list, #lunch-list, #dinner-list, #snack-list {
@@ -135,7 +186,7 @@ button:hover, #get-feedback-btn:hover {
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-soft);
     font-size: 0.95rem;
 }
 
@@ -176,8 +227,8 @@ button:hover, #get-feedback-btn:hover {
 }
 
 #ai-feedback #feedback-result {
-    background-color: #fff;
-    border: 1px solid #e0e0e0;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
     padding: 15px;
     border-radius: var(--border-radius);
     margin-top: 15px;

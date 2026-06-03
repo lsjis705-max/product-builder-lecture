@@ -21,6 +21,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalCaloriesEl = document.getElementById('total-calories');
     const getFeedbackBtn = document.getElementById('get-feedback-btn');
     const feedbackResultEl = document.getElementById('feedback-result');
+    const themeToggleBtn = document.getElementById('theme-toggle');
+
+    // --- Theme (Dark/Light Mode) Functions ---
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        themeToggleBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
+    }
+
+    function loadTheme() {
+        const saved = localStorage.getItem('theme');
+        if (saved) {
+            applyTheme(saved);
+        } else {
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            applyTheme(prefersDark ? 'dark' : 'light');
+        }
+    }
+
+    function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        applyTheme(next);
+        localStorage.setItem('theme', next);
+    }
 
     // --- Data from localStorage ---
     let foods = JSON.parse(localStorage.getItem('foods')) || [];
@@ -28,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Initializer Function ---
     function init() {
+        loadTheme();
         loadProfile();
         Object.values(mealLists).forEach(list => list.innerHTML = '');
         foods.forEach(food => addFoodToListDOM(food));
@@ -227,7 +252,8 @@ document.addEventListener('DOMContentLoaded', () => {
     foodForm.addEventListener('submit', handleFoodFormSubmit);
     Object.values(mealLists).forEach(list => list.addEventListener('click', handleListClick));
     getFeedbackBtn.addEventListener('click', getAIFeedback);
-    
+    themeToggleBtn.addEventListener('click', toggleTheme);
+
     // --- Initialize The App ---
     init();
 });
