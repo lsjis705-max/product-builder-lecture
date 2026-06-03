@@ -106,6 +106,27 @@
                 <p>오늘의 식단을 모두 입력한 후 버튼을 눌러 AI 트레이너의 피드백을 받아보세요.</p>
             </div>
         </section>
+
+        <section id="contact">
+            <h2>제휴 문의</h2>
+            <p class="contact-desc">제휴·제안이 있으시면 아래 폼으로 문의해주세요. 빠르게 답변드릴게요!</p>
+            <form id="contact-form" action="https://formspree.io/f/xlgkrkva" method="POST">
+                <div class="form-group">
+                    <label for="contact-name">이름 / 회사명</label>
+                    <input type="text" id="contact-name" name="name" placeholder="예: 홍길동 / OO헬스장" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact-email">답변 받을 이메일</label>
+                    <input type="email" id="contact-email" name="email" placeholder="예: contact@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact-message">문의 내용</label>
+                    <textarea id="contact-message" name="message" rows="5" placeholder="제휴 또는 문의하실 내용을 자유롭게 적어주세요." required></textarea>
+                </div>
+                <button type="submit">문의 보내기</button>
+            </form>
+            <p id="contact-status" role="status"></p>
+        </section>
     </main>
 
     <footer>

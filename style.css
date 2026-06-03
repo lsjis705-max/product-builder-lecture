@@ -143,7 +143,7 @@ form {
 }
 
 
-input, select {
+input, select, textarea {
     padding: 12px;
     border: 1px solid var(--border-color);
     border-radius: 4px;
@@ -152,6 +152,11 @@ input, select {
     box-sizing: border-box;
     background-color: var(--surface-color);
     color: var(--text-color);
+}
+
+textarea {
+    resize: vertical;
+    font-family: inherit;
 }
 
 button {
@@ -235,6 +240,26 @@ button:hover, #get-feedback-btn:hover {
     white-space: pre-wrap; 
     font-family: monospace;
     min-height: 100px;
+}
+
+.contact-desc {
+    margin-top: 0;
+    font-size: 0.95rem;
+    opacity: 0.85;
+}
+
+#contact-status {
+    margin-bottom: 0;
+    font-weight: 600;
+    min-height: 1.2em;
+}
+
+#contact-status.success {
+    color: #2f9e44;
+}
+
+#contact-status.error {
+    color: var(--danger-color);
 }
 
 footer {

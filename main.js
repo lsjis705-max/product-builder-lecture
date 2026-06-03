@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const feedbackResultEl = document.getElementById('feedback-result');
     const themeToggleBtn = document.getElementById('theme-toggle');
 
+    const contactForm = document.getElementById('contact-form');
+    const contactStatus = document.getElementById('contact-status');
+
     // --- Theme (Dark/Light Mode) Functions ---
     function applyTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
@@ -247,12 +250,47 @@ document.addEventListener('DOMContentLoaded', () => {
         return feedbackText;
     }
 
+    // --- Contact (Partnership Inquiry) Function ---
+    async function handleContactSubmit(e) {
+        e.preventDefault();
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+
+        contactStatus.className = '';
+        contactStatus.textContent = '전송 중입니다...';
+        submitBtn.disabled = true;
+
+        try {
+            const response = await fetch(contactForm.action, {
+                method: 'POST',
+                body: new FormData(contactForm),
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (response.ok) {
+                contactForm.reset();
+                contactStatus.className = 'success';
+                contactStatus.textContent = '문의가 정상적으로 접수되었습니다. 감사합니다! 🙌';
+            } else {
+                const data = await response.json().catch(() => ({}));
+                const message = data.errors ? data.errors.map(err => err.message).join(', ') : '전송에 실패했습니다.';
+                contactStatus.className = 'error';
+                contactStatus.textContent = `오류: ${message} 잠시 후 다시 시도해주세요.`;
+            }
+        } catch (err) {
+            contactStatus.className = 'error';
+            contactStatus.textContent = '네트워크 오류로 전송에 실패했습니다. 연결을 확인해주세요.';
+        } finally {
+            submitBtn.disabled = false;
+        }
+    }
+
     // --- Event Listeners ---
     profileForm.addEventListener('submit', saveProfile);
     foodForm.addEventListener('submit', handleFoodFormSubmit);
     Object.values(mealLists).forEach(list => list.addEventListener('click', handleListClick));
     getFeedbackBtn.addEventListener('click', getAIFeedback);
     themeToggleBtn.addEventListener('click', toggleTheme);
+    contactForm.addEventListener('submit', handleContactSubmit);
 
     // --- Initialize The App ---
     init();
