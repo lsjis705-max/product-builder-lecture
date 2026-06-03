@@ -19,9 +19,16 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const totalCaloriesEl = document.getElementById('total-calories');
+    const selectedDateLabelEl = document.getElementById('selected-date-label');
     const getFeedbackBtn = document.getElementById('get-feedback-btn');
     const feedbackResultEl = document.getElementById('feedback-result');
     const themeToggleBtn = document.getElementById('theme-toggle');
+
+    const diaryDateInput = document.getElementById('diary-date');
+    const prevDayBtn = document.getElementById('prev-day');
+    const nextDayBtn = document.getElementById('next-day');
+    const todayBtn = document.getElementById('today-btn');
+    const historyListEl = document.getElementById('history-list');
 
     const contactForm = document.getElementById('contact-form');
     const contactStatus = document.getElementById('contact-status');
@@ -49,17 +56,106 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('theme', next);
     }
 
+    // --- Date Helpers ---
+    function toDateStr(d) {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+    }
+
+    function todayStr() {
+        return toDateStr(new Date());
+    }
+
+    function shiftDate(dateStr, deltaDays) {
+        const [y, m, d] = dateStr.split('-').map(Number);
+        const date = new Date(y, m - 1, d);
+        date.setDate(date.getDate() + deltaDays);
+        return toDateStr(date);
+    }
+
+    function formatDateLabel(dateStr) {
+        const [y, m, d] = dateStr.split('-').map(Number);
+        const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+        const wd = weekdays[new Date(y, m - 1, d).getDay()];
+        const suffix = dateStr === todayStr() ? ' (오늘)' : '';
+        return `${y}년 ${m}월 ${d}일 (${wd})${suffix}`;
+    }
+
     // --- Data from localStorage ---
     let foods = JSON.parse(localStorage.getItem('foods')) || [];
     let nextId = localStorage.getItem('nextId') ? parseInt(localStorage.getItem('nextId'), 10) : 1;
+    let feedbacks = JSON.parse(localStorage.getItem('feedbacks')) || {};
+    let selectedDate = todayStr();
+
+    // Migrate legacy entries that have no date — assign them to today so records aren't lost.
+    let migrated = false;
+    foods.forEach(food => {
+        if (!food.date) { food.date = todayStr(); migrated = true; }
+    });
+    if (migrated) saveToLocalStorage();
+
+    // --- Diary Helpers ---
+    function getFoodsForDate(dateStr) {
+        return foods.filter(food => food.date === dateStr);
+    }
+
+    function getRecordedDates() {
+        return [...new Set(foods.map(food => food.date))].sort().reverse();
+    }
 
     // --- Initializer Function ---
     function init() {
         loadTheme();
         loadProfile();
+        diaryDateInput.value = selectedDate;
+        renderDiary();
+    }
+
+    // Render the meal lists, total, label, history, and feedback for the selected date.
+    function renderDiary() {
+        selectedDateLabelEl.textContent = formatDateLabel(selectedDate);
         Object.values(mealLists).forEach(list => list.innerHTML = '');
-        foods.forEach(food => addFoodToListDOM(food));
+        getFoodsForDate(selectedDate).forEach(food => addFoodToListDOM(food));
         updateTotalCalories();
+        renderHistory();
+        renderSavedFeedback();
+    }
+
+    function renderHistory() {
+        const dates = getRecordedDates();
+        if (dates.length === 0) {
+            historyListEl.innerHTML = '<li class="empty-history">아직 기록된 날짜가 없습니다.</li>';
+            return;
+        }
+        historyListEl.innerHTML = '';
+        dates.forEach(dateStr => {
+            const dayTotal = getFoodsForDate(dateStr).reduce((sum, f) => sum + f.calories, 0);
+            const li = document.createElement('li');
+            li.className = 'history-item' + (dateStr === selectedDate ? ' active' : '');
+            li.dataset.date = dateStr;
+            li.innerHTML = `
+                <span class="history-date">${formatDateLabel(dateStr)}</span>
+                <span class="history-cal">${dayTotal} kcal</span>
+            `;
+            historyListEl.appendChild(li);
+        });
+    }
+
+    function renderSavedFeedback() {
+        if (feedbacks[selectedDate]) {
+            feedbackResultEl.innerHTML = `<p style="white-space: pre-wrap;">${feedbacks[selectedDate]}</p>`;
+        } else {
+            feedbackResultEl.innerHTML = '<p>이 날짜의 식단을 입력한 후 버튼을 눌러 AI 트레이너의 피드백을 받아보세요.</p>';
+        }
+    }
+
+    function changeDate(dateStr) {
+        if (!dateStr) return;
+        selectedDate = dateStr;
+        diaryDateInput.value = selectedDate;
+        renderDiary();
     }
 
     // --- AI Simulation Functions ---
@@ -135,10 +231,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (foodName && quantity) {
             const calories = await estimateCalories(foodName, quantity);
-            const food = { id: nextId++, meal: mealType, name: foodName, quantity: quantity, calories: calories };
+            const food = { id: nextId++, date: selectedDate, meal: mealType, name: foodName, quantity: quantity, calories: calories };
             foods.push(food);
             addFoodToListDOM(food);
             updateAndSave();
+            renderHistory();
             foodNameInput.value = '';
             quantityInput.value = '';
             foodNameInput.focus();
@@ -169,12 +266,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const foodId = parseInt(e.target.dataset.id, 10);
             foods = foods.filter(food => food.id !== foodId);
             updateAndSave();
-            init(); // Re-render all lists
+            renderDiary(); // Re-render lists, total, and history for the current date
         }
     }
 
     function updateTotalCalories() {
-        const total = foods.reduce((sum, food) => sum + food.calories, 0);
+        const total = getFoodsForDate(selectedDate).reduce((sum, food) => sum + food.calories, 0);
         totalCaloriesEl.textContent = total;
     }
 
@@ -196,7 +293,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (foods.length === 0) {
+        const dayFoods = getFoodsForDate(selectedDate);
+        if (dayFoods.length === 0) {
             alert('피드백을 받을 식단을 먼저 추가해주세요.');
             return;
         }
@@ -204,7 +302,9 @@ document.addEventListener('DOMContentLoaded', () => {
         feedbackResultEl.innerHTML = 'AI 트레이너가 식단을 분석하고 있습니다... 잠시만 기다려주세요.';
 
         setTimeout(() => {
-            const feedback = generateFeedback(profile, foods);
+            const feedback = generateFeedback(profile, dayFoods);
+            feedbacks[selectedDate] = feedback;
+            localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
             feedbackResultEl.innerHTML = `<p style="white-space: pre-wrap;">${feedback}</p>`;
         }, 1500);
     }
@@ -222,7 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let feedbackText = `AI 트레이너 피드백:\n\n`;
         feedbackText += `현재 목표: ${goal}\n`;
-        feedbackText += `오늘 섭취한 총 칼로리: ${totalCalories} kcal\n\n`;
+        feedbackText += `섭취한 총 칼로리: ${totalCalories} kcal\n\n`;
         
         feedbackText += `[식사별 칼로리 분석]\n`;
         feedbackText += `아침: ${caloriesByMeal.breakfast || 0} kcal\n`;
@@ -291,6 +391,16 @@ document.addEventListener('DOMContentLoaded', () => {
     getFeedbackBtn.addEventListener('click', getAIFeedback);
     themeToggleBtn.addEventListener('click', toggleTheme);
     contactForm.addEventListener('submit', handleContactSubmit);
+
+    // Diary date navigation
+    diaryDateInput.addEventListener('change', () => changeDate(diaryDateInput.value));
+    prevDayBtn.addEventListener('click', () => changeDate(shiftDate(selectedDate, -1)));
+    nextDayBtn.addEventListener('click', () => changeDate(shiftDate(selectedDate, 1)));
+    todayBtn.addEventListener('click', () => changeDate(todayStr()));
+    historyListEl.addEventListener('click', (e) => {
+        const item = e.target.closest('.history-item');
+        if (item) changeDate(item.dataset.date);
+    });
 
     // --- Initialize The App ---
     init();

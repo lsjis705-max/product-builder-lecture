@@ -14,6 +14,20 @@
     </header>
 
     <main>
+        <section id="diary-nav">
+            <h2>📅 식단일지</h2>
+            <div class="date-controls">
+                <button type="button" id="prev-day" aria-label="이전 날">◀</button>
+                <input type="date" id="diary-date" aria-label="날짜 선택">
+                <button type="button" id="next-day" aria-label="다음 날">▶</button>
+                <button type="button" id="today-btn">오늘</button>
+            </div>
+            <div id="diary-history">
+                <h3>기록된 날짜</h3>
+                <ul id="history-list"><li class="empty-history">아직 기록된 날짜가 없습니다.</li></ul>
+            </div>
+        </section>
+
         <section id="user-profile">
             <h2>내 정보 및 목표 설정</h2>
             <form id="profile-form">
@@ -95,7 +109,7 @@
 
         <section id="total-log">
             <p>
-                <strong>총 칼로리: <span id="total-calories">0</span> kcal</strong>
+                <strong><span id="selected-date-label"></span> 총 칼로리: <span id="total-calories">0</span> kcal</strong>
             </p>
         </section>
 

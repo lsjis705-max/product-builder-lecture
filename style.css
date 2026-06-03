@@ -242,6 +242,74 @@ button:hover, #get-feedback-btn:hover {
     min-height: 100px;
 }
 
+#diary-nav .date-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.date-controls button {
+    width: auto;
+    padding: 10px 14px;
+}
+
+.date-controls #diary-date {
+    width: auto;
+    flex: 1;
+    min-width: 140px;
+}
+
+#diary-history h3 {
+    margin: 0 0 10px;
+    font-size: 1.05rem;
+    color: var(--text-color);
+    opacity: 0.85;
+}
+
+#history-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.history-item:hover {
+    border-color: var(--primary-color);
+}
+
+.history-item.active {
+    border-color: var(--primary-color);
+    background-color: rgba(0, 123, 255, 0.08);
+    font-weight: 600;
+}
+
+.history-cal {
+    color: var(--primary-color);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.empty-history {
+    list-style: none;
+    opacity: 0.6;
+    padding: 8px 0;
+}
+
 .contact-desc {
     margin-top: 0;
     font-size: 0.95rem;
