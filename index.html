@@ -1,14 +1,116 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 식단 관리</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
+
+    <header>
+        <h1>AI 식단 관리</h1>
+    </header>
+
+    <main>
+        <section id="user-profile">
+            <h2>내 정보 및 목표 설정</h2>
+            <form id="profile-form">
+                <div class="form-group">
+                    <label for="height">키 (cm)</label>
+                    <input type="number" id="height" placeholder="예: 175">
+                </div>
+                <div class="form-group">
+                    <label for="weight">현재 몸무게 (kg)</label>
+                    <input type="number" id="weight" placeholder="예: 70">
+                </div>
+                <div class="form-group">
+                    <label for="exercise-frequency">운동 빈도</label>
+                    <select id="exercise-frequency">
+                        <option value="none">운동 안 함</option>
+                        <option value="low">주 1-2회</option>
+                        <option value="medium">주 3-5회</option>
+                        <option value="high">주 6-7회</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="fitness-goal">운동 목적</label>
+                    <select id="fitness-goal">
+                        <option value="weight-loss">체중 감량</option>
+                        <option value="lean-mass-up">린매스업</option>
+                        <option value="bulk-up">벌크업</option>
+                        <option value="maintenance">체중 유지</option>
+                    </select>
+                </div>
+                <button type="submit">저장</button>
+            </form>
+        </section>
+
+        <section id="food-entry">
+            <h2>음식 추가</h2>
+            <form id="food-form">
+                <div class="form-group">
+                    <label for="meal-type">식사 종류</label>
+                    <select id="meal-type">
+                        <option value="breakfast">아침</option>
+                        <option value="lunch">점심</option>
+                        <option value="dinner">저녁</option>
+                        <option value="snack">간식</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="food-name">음식 이름</label>
+                    <input type="text" id="food-name" placeholder="예: 닭가슴살" required>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">섭취량</label>
+                    <input type="text" id="quantity" placeholder="예: 100g, 1개" required>
+                </div>
+                <button type="submit">추가</button>
+            </form>
+        </section>
+
+        <div class="meal-sections">
+            <section id="breakfast-log" class="log-section">
+                <h2>아침 식단</h2>
+                <ul id="breakfast-list"></ul>
+            </section>
+    
+            <section id="lunch-log" class="log-section">
+                <h2>점심 식단</h2>
+                <ul id="lunch-list"></ul>
+            </section>
+    
+            <section id="dinner-log" class="log-section">
+                <h2>저녁 식단</h2>
+                <ul id="dinner-list"></ul>
+            </section>
+    
+            <section id="snack-log" class="log-section">
+                <h2>간식</h2>
+                <ul id="snack-list"></ul>
+            </section>
+        </div>
+
+        <section id="total-log">
+            <p>
+                <strong>총 칼로리: <span id="total-calories">0</span> kcal</strong>
+            </p>
+        </section>
+
+        <section id="ai-feedback">
+            <h2>AI 식단 피드백</h2>
+            <button id="get-feedback-btn">피드백 받기</button>
+            <div id="feedback-result">
+                <p>오늘의 식단을 모두 입력한 후 버튼을 눌러 AI 트레이너의 피드백을 받아보세요.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 AI 식단 관리. 모든 권리 보유.</p>
+    </footer>
+
+    <script src="main.js"></script>
 </body>
 </html>

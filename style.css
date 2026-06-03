@@ -1,1 +1,194 @@
-/* Add styles here */
+
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #f8f9fa;
+    --text-color: #333;
+    --background-color: #fff;
+    --danger-color: #dc3545;
+    --container-padding: 20px;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: "Malgun Gothic", "Apple SD Gothic Neo", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+header {
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+    padding: 1.5rem 0;
+    box-shadow: var(--box-shadow);
+}
+
+main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: var(--container-padding);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+@media (min-width: 992px) {
+    main {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    #user-profile, #food-entry, .meal-sections, #total-log, #ai-feedback {
+        grid-column: 1 / -1;
+    }
+}
+
+section {
+    background-color: var(--secondary-color);
+    padding: var(--container-padding);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.meal-sections {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.log-section {
+    background-color: #fff; /* Give meal logs a slightly different background */
+    border: 1px solid #e9ecef;
+}
+
+#total-log {
+    text-align: right;
+    font-size: 1.2rem;
+    background: none;
+    box-shadow: none;
+    padding: 0;
+}
+
+h2 {
+    margin-top: 0;
+    color: var(--primary-color);
+    font-size: 1.5rem;
+}
+
+form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+@media (min-width: 768px) {
+    #food-form {
+        grid-template-columns: 1fr 1fr 1fr auto;
+        align-items: end;
+    }
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+#profile-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+
+input, select, button {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+button, #get-feedback-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+}
+
+button:hover, #get-feedback-btn:hover {
+    background-color: #0056b3;
+}
+
+#breakfast-list, #lunch-list, #dinner-list, #snack-list {
+    list-style: none;
+    padding: 0;
+    min-height: 60px; /* Ensure empty lists have some height */
+}
+
+.log-section ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.95rem;
+}
+
+.food-details {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.food-calories {
+    font-weight: 600;
+}
+
+.delete-btn {
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+#total-calories {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+#ai-feedback #feedback-result {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+    border-radius: var(--border-radius);
+    margin-top: 15px;
+    white-space: pre-wrap; 
+    font-family: monospace;
+    min-height: 100px;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 2rem;
+    background-color: var(--secondary-color);
+}
